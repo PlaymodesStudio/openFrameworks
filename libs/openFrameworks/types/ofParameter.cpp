@@ -119,11 +119,14 @@ ofParameter<void>& ofParameter<void>::set(const std::string & name){
 }
 
 void ofParameter<void>::trigger(){
-    // If the object is notifying its parents, just set the value without triggering an event.
+    // If the object is notifying its parents, Do not trigger the event.
     if(!obj->bInNotify)
     {
-		// Erase each invalid parent
-		ofParameterGroup::checkAndRemoveExpiredParents(obj->parents);
+        obj->bInNotify = true;
+        
+        ofNotifyEvent(obj->changedE, this);
+        // Erase each invalid parent
+        ofParameterGroup::checkAndRemoveExpiredParents(obj->parents);
         
         // notify all leftover (valid) parents of this object's changed value.
         // this can't happen in the same iterator as above, because a notified listener
@@ -143,6 +146,9 @@ void ofParameter<void>::trigger(const void * sender){
 	// If the object is notifying its parents, Do not trigger the event.
     if(!obj->bInNotify)
     {
+        obj->bInNotify = true;
+        
+        ofNotifyEvent(obj->changedE, this);
         // Erase each invalid parent
 		ofParameterGroup::checkAndRemoveExpiredParents(obj->parents);
         
