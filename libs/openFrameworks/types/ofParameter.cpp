@@ -80,8 +80,21 @@ ofParameter<void>::ofParameter(const string& name)
 
 }
 
-void ofParameter<void>::setName(const string & name){
+bool ofParameter<void>::setName(const string & name){
+	std::string oldName = getName();
+	if(escape(name) == escape(oldName)) return false;
+	if(!ofParameterGroup::changeChildName(this, obj->parents, escape(oldName), escape(name))){
+		setName(oldName);
+		return false;
+	}
 	obj->name = name;
+	return true;
+}
+
+
+ofEvent<std::string>& ofParameter<void>::nameChangedEvent()
+{
+	return obj->nameChangedEvent;
 }
 
 string ofParameter<void>::getName() const{
@@ -109,6 +122,17 @@ void ofParameter<void>::trigger(){
     // If the object is notifying its parents, just set the value without triggering an event.
     if(!obj->bInNotify)
     {
+		// Erase each invalid parent
+		ofParameterGroup::checkAndRemoveExpiredParents(obj->parents);
+        
+        // notify all leftover (valid) parents of this object's changed value.
+        // this can't happen in the same iterator as above, because a notified listener
+        // might perform similar cleanups that would corrupt our iterator
+        // (which appens for example if the listener calls getFirstParent on us)
+        for(auto & parent: obj->parents){
+            auto p = parent.lock();
+            if(p){
+                p->notifyParameterChanged(*this);
         // Mark the object as in its notification loop.
         obj->bInNotify = true;
 
@@ -144,10 +168,7 @@ void ofParameter<void>::trigger(const void * sender){
     if(!obj->bInNotify)
     {
         // Erase each invalid parent
-        obj->parents.erase(std::remove_if(obj->parents.begin(),
-                                          obj->parents.end(),
-                                          [](const std::weak_ptr<ofParameterGroup::Value> & p){ return p.expired(); }),
-                           obj->parents.end());
+		ofParameterGroup::checkAndRemoveExpiredParents(obj->parents);
         
         // notify all leftover (valid) parents of this object's changed value.
         // this can't happen in the same iterator as above, because a notified listener
