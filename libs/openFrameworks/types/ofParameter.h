@@ -1121,6 +1121,7 @@ private:
 		ofEvent<void> changedE;
 		ofEvent<std::string> nameChangedEvent;
         bool bInNotify;
+		ofEvent<std::string> nameChangedEvent;
 		bool serializable;
 		std::vector<std::weak_ptr<ofParameterGroup::Value>> parents;
 	};
