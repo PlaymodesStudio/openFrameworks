@@ -1,11 +1,12 @@
 #pragma once
 
 #include "ofEvents.h"
-#include "ofConstants.h"
 #include "ofPoint.h"
 #include "ofRectangle.h"
-#include "ofColor.h"
 #include "ofLog.h"
+#include "ofConstants.h"
+#include "ofColor.h"
+
 #include <map>
 
 template<typename ParameterType>
@@ -623,7 +624,8 @@ private:
 	class Value{
 	public:
 		Value()
-		:min(of::priv::TypeInfo<ParameterType>::min())
+		:init(of::priv::TypeInfo<ParameterType>::min())
+		,min(of::priv::TypeInfo<ParameterType>::min())
 		,max(of::priv::TypeInfo<ParameterType>::max())
 		,bInNotify(false)
 		,serializable(true){}
@@ -848,7 +850,7 @@ ParameterType ofParameter<ParameterType>::getInit() const {
 
 template<typename ParameterType>
 void ofParameter<ParameterType>::reInit() {
-    set(obj->init);
+    setMethod(obj->init);
 }
 
 template<typename ParameterType>
@@ -1121,7 +1123,6 @@ private:
 		ofEvent<void> changedE;
 		ofEvent<std::string> nameChangedEvent;
         bool bInNotify;
-		ofEvent<std::string> nameChangedEvent;
 		bool serializable;
 		std::vector<std::weak_ptr<ofParameterGroup::Value>> parents;
 	};

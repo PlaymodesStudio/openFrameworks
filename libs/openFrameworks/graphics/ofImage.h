@@ -1,15 +1,19 @@
 #pragma once
 
-#include "ofConstants.h"
 #include "ofTexture.h"
-#include "ofPixels.h"
 #include "ofGLBaseTypes.h"
 #include "ofGraphicsConstants.h"
 #include "ofGLUtils.h"
+#include "ofConstants.h"
+
+template<typename T>
+class ofPixels_;
+typedef ofPixels_<unsigned char> ofPixels;
+typedef ofPixels_<float> ofFloatPixels;
+typedef ofPixels_<unsigned short> ofShortPixels;
 
 class ofFile;
 class ofBuffer;
-
 
 /// \file
 /// ofImage is used for loading, saving and drawing images in openFrameworks.

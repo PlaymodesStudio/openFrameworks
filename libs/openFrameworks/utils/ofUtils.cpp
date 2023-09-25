@@ -1,4 +1,5 @@
 #include "ofUtils.h"
+// FIXME: split ofUtils in two files, one which uses urlparser / ofImage, other without for smaller apps.
 #include "ofImage.h"
 #include "ofLog.h"
 #include "ofAppBaseWindow.h"
@@ -7,6 +8,7 @@
 #include "ofEvents.h"
 #include "ofGLUtils.h"
 #include "ofMath.h"
+#include "ofPixels.h"
 
 #include <chrono>
 #include <numeric>
@@ -15,16 +17,16 @@
 
 #ifdef TARGET_WIN32	 // For ofLaunchBrowser.
 	#include <shellapi.h>
-#endif
-
-
-#ifdef TARGET_WIN32
     #ifndef _MSC_VER
         #include <unistd.h> // this if for MINGW / _getcwd
 		#include <sys/param.h> // for MAXPATHLEN
+	// FIXME: else
     #endif
+	#ifdef _MSC_VER
+		#include <direct.h>
+	#endif
+	#include <mmsystem.h>
 #endif
-
 
 #if defined(TARGET_OF_IOS) || defined(TARGET_OSX ) || defined(TARGET_LINUX) || defined(TARGET_EMSCRIPTEN)
 	#include <sys/time.h>
@@ -37,14 +39,6 @@
 	#endif
 	#include <mach/clock.h>
 	#include <mach/mach.h>
-#endif
-
-#ifdef TARGET_WIN32
-    #include <mmsystem.h>
-	#ifdef _MSC_VER
-		#include <direct.h>
-	#endif
-
 #endif
 
 #ifdef TARGET_OF_IOS
@@ -67,7 +61,7 @@ namespace of{
 namespace priv{
 	void initutils(){
         ofResetElapsedTimeCounter();
-        ofSeedRandom();
+        of::random::Engine::construct();
     }
 
 	void endutils(){
@@ -343,6 +337,10 @@ uint64_t ofGetUnixTime(){
 	return static_cast<uint64_t>(time(nullptr));
 }
 
+uint64_t ofGetUnixTimeMillis() {
+    auto elapsed = std::chrono::system_clock::now().time_since_epoch();
+    return std::chrono::duration_cast<std::chrono::milliseconds>(elapsed).count();
+}
 
 //--------------------------------------
 void ofSleepMillis(int millis){
@@ -1082,6 +1080,8 @@ ofTargetPlatform ofGetTargetPlatform(){
         return OF_TARGET_LINUXARMV6L;
     } else if(ofIsStringInString(arch,"armv7l")) {
         return OF_TARGET_LINUXARMV7L;
+	} else if(ofIsStringInString(arch,"aarch64")) {
+		return OF_TARGET_LINUXAARCH64;		
     } else {
         return OF_TARGET_LINUX;
     }
@@ -1102,7 +1102,7 @@ ofTargetPlatform ofGetTargetPlatform(){
 #endif
 }
 
-std::string ofGetEnv(const std::string & var){
+std::string ofGetEnv(const std::string & var, const std::string defaultValue){
 #ifdef TARGET_WIN32
 	const size_t BUFSIZE = 4096;
 	std::vector<char> pszOldVal(BUFSIZE, 0);
@@ -1110,14 +1110,14 @@ std::string ofGetEnv(const std::string & var){
 	if(size>0){
 		return std::string(pszOldVal.begin(), pszOldVal.begin()+size);
 	}else{
-		return "";
+		return defaultValue;
 	}
 #else
 	auto value = getenv(var.c_str());
 	if(value){
 		return value;
 	}else{
-		return "";
+		return defaultValue;
 	}
 #endif
 }

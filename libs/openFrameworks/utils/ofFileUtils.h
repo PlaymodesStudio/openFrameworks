@@ -1,6 +1,6 @@
 #pragma once
 
-// FIXME: deprecated only
+// FIXME: constants deprecated only
 #include "ofConstants.h"
 #include <fstream>
 
@@ -281,7 +281,7 @@ ofBuffer ofBufferFromFile(const of::filesystem::path & path, bool binary=true);
 /// \param buffer data source to write from
 /// \param binary set to false if you are writing a text file & want lines
 /// split at endline characters automatically
-bool ofBufferToFile(of::filesystem::path & path, const ofBuffer& buffer, bool binary=true);
+bool ofBufferToFile(const of::filesystem::path & path, const ofBuffer& buffer, bool binary=true);
 
 //--------------------------------------------------
 /// \class ofFilePath
@@ -1101,11 +1101,18 @@ public:
 	/// This is for backwards compatibility with ofxDirList.
 	void reset();
 	
+	typedef enum{
+            SORT_FAST,
+            SORT_NATURAL,
+            SORT_BY_DATE
+	}SortMode;
+
 	/// Sort the directory contents list alphabetically.
 	///
 	/// \warning Call listDir() before using this function or there will be
 	/// nothing to sort.
-	void sort();
+	/// \param SortMode options are SORT_FAST, SORT_NATURAL (default) or SORT_BY_DATE
+	void sort(const SortMode & mode = SORT_NATURAL);
 	
 	/// Sort the directory contents list by date.
 	///

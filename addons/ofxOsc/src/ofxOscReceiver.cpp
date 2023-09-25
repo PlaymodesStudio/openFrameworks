@@ -28,11 +28,12 @@ ofxOscReceiver& ofxOscReceiver::copy(const ofxOscReceiver &other){
 }
 
 //--------------------------------------------------------------
-bool ofxOscReceiver::setup(int port){
+bool ofxOscReceiver::setup(std::string host, int port) {
 	if(listenSocket){ // already running
 		stop();
 	}
 	settings.port = port;
+    settings.host = host;
 	return start();
 }
 
@@ -62,7 +63,7 @@ bool ofxOscReceiver::start() {
 	// create socket
 	osc::UdpListeningReceiveSocket *socket = nullptr;
 	try{
-		osc::IpEndpointName name(osc::IpEndpointName::ANY_ADDRESS, settings.port);
+		osc::IpEndpointName name(settings.host.c_str(), settings.port);
 		socket = new osc::UdpListeningReceiveSocket(name, this, settings.reuse);
 		auto deleter = [](osc::UdpListeningReceiveSocket*socket){
 			// tell the socket to shutdown
@@ -141,7 +142,7 @@ bool ofxOscReceiver::getParameter(ofAbstractParameter &parameter){
 			if(p){
 				if(address[i] == p->getEscapedName()){
 					if(p->type() == typeid(ofParameterGroup).name()){
-						if(address.size() >= i+1){
+						if(address.size() > i+1){
 							ofParameterGroup* g = static_cast<ofParameterGroup*>(p);
 							if(g->contains(address[i+1])){
 								p = &g->get(address[i+1]);
