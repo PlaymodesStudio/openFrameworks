@@ -1,10 +1,12 @@
 #pragma once
 
 #include "ofEvents.h"
+// FIXME: crossed references. ofPoint adds ofVec3f which adds ofVec2f and ofVec4f
 #include "ofPoint.h"
+
 #include "ofRectangle.h"
 #include "ofLog.h"
-#include "ofConstants.h"
+// #include "ofConstants.h"
 #include "ofColor.h"
 
 #include <map>
@@ -56,6 +58,11 @@ public:
 		return static_cast<const ofReadOnlyParameter<ParameterType, Friend> &>(*this);
 	}
 
+	template<typename OtherType>
+	bool isOfType() const {
+		return typeid(*this) == typeid(ofParameter<OtherType>);
+	}
+	
 	ofParameterGroup & castGroup();
 	const ofParameterGroup & castGroup() const;
 
