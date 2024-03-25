@@ -112,7 +112,7 @@ ofParameter<void> & ofParameter<void>::set(const std::string & name) {
 }
 
 void ofParameter<void>::trigger() {
-    ofNotifyEvent(obj->changedE, this);
+//    ofNotifyEvent(obj->changedE, this);
     // Notify all parents, if there are any.
     if(!obj->bInNotify)
     {
@@ -137,7 +137,7 @@ void ofParameter<void>::trigger() {
 }
 
 void ofParameter<void>::trigger(const void * sender) {
-    ofNotifyEvent(obj->changedE, sender);
+//    ofNotifyEvent(obj->changedE, sender);
     // Notify all parents, if there are any.
     if(!obj->bInNotify)
     {
