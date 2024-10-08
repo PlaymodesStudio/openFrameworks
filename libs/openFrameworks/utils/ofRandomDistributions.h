@@ -2,6 +2,7 @@
 #define OF_RANDOM_DISTRIBUTIONS_H_
 
 #include "ofRandomEngine.h"
+#include <iostream>
 
 // https://gist.github.com/imneme/540829265469e673d045
 // https://github.com/effolkronium/random/tree/master
@@ -363,7 +364,7 @@ poisson(double mean) {
 }
 
 /// \brief Generates a vector of random non-negative integer values according to poisson distribution
-/// https://en.cppreference.com/w/cpp/numeric/random/poisson_distribution\
+/// https://en.cppreference.com/w/cpp/numeric/random/poisson_distribution
 /// note that this distribution produces int, which are cast into floats for glm
 /// \tparam T the desired output vector type
 /// \param mean the mean
@@ -375,7 +376,7 @@ poisson(double mean) {
 }
 
 /// \brief Generates a vector of random non-negative integer values according to poisson distribution
-/// https://en.cppreference.com/w/cpp/numeric/random/poisson_distribution\
+/// https://en.cppreference.com/w/cpp/numeric/random/poisson_distribution
 /// (note that this distribution produces int, which are cast into floats for glm)
 /// with specialized parameters (different params for members of the vector)
 /// \tparam T the desired output vector type
@@ -605,7 +606,7 @@ constexpr auto gaussian(Args &&... args) -> decltype(normal<T>(std::forward<Args
 
 /// \brief alias for of::random::bernoulli
 template <class T = bool, typename... Args>
-constexpr auto yes(Args &&... args) -> decltype(bernoulli<T>(std::forward<Args>(args)...)) {
+constexpr auto sometimes(Args &&... args) -> decltype(bernoulli<T>(std::forward<Args>(args)...)) {
 	return bernoulli<T>(std::forward<Args>(args)...);
 }
 
@@ -762,10 +763,10 @@ template <class T>
 T ofRandomBernoulli(T prob) { return of::random::bernoulli<T>(prob); }
 
 template <class T, typename... Args>
-T ofRandomYes(Args &&... args) { return of::random::yes<T>(std::forward<Args>(args)...); }
+T ofRandomSometimes(Args &&... args) { return of::random::sometimes<T>(std::forward<Args>(args)...); }
 
 template <class T>
-T ofRandomYes(T prob) { return of::random::yes<T>(prob); }
+T ofRandomSometimes(T prob) { return of::random::sometimes<T>(prob); }
 
 template <class T, typename... Args>
 T ofRandomPoisson(Args &&... args) { return of::random::poisson<T>(std::forward<Args>(args)...); }

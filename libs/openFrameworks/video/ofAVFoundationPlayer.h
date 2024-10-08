@@ -9,7 +9,7 @@
 #include "ofVideoBaseTypes.h"
 #include "ofTexture.h"
 #include "ofThread.h"
-// FIXME: Template
+// MARK: Template if pixels is changed to unique_ptr
 #include "ofPixels.h"
 
 #ifdef __OBJC__
@@ -26,7 +26,8 @@ public:
 	
 	ofAVFoundationPlayer();
 	~ofAVFoundationPlayer();
-	   
+	
+	//FIXME: FS
 	bool load(std::string name);
 	void loadAsync(std::string name);
 	void close();

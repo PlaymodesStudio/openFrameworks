@@ -80,9 +80,9 @@
 #include "ofWindowSettings.h"
 #if !defined(TARGET_OF_IOS) & !defined(TARGET_ANDROID) & !defined(TARGET_EMSCRIPTEN) & !defined(TARGET_RASPBERRY_PI_LEGACY)
     #include "ofAppGLFWWindow.h"
-    #if !defined(TARGET_LINUX_ARM)
-        #include "ofAppGlutWindow.h"
-    #endif
+//    #if !defined(TARGET_LINUX_ARM)
+//        #include "ofAppGlutWindow.h"
+//    #endif
 #endif
 
 //--------------------------
@@ -115,8 +115,8 @@
 using namespace std;
 #else
 
-    // this will eventually be disabled by default
-    #define OF_USE_MINIMAL_STD
+// this will eventually be disabled by default
+#define OF_USE_MINIMAL_STD
     #ifdef OF_USE_MINIMAL_STD
 using std::cout;
 using std::deque;

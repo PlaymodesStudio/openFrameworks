@@ -8,7 +8,8 @@
 #pragma once
 
 #include "ofGraphicsConstants.h"
-#include "ofConstants.h"
+// MARK: Targets / Defines
+//#include "ofConstants.h"
 
 class ofShader;
 class ofGLProgrammableRenderer;
@@ -17,7 +18,6 @@ class ofTexture;
 
 template<typename T>
 class ofPixels_;
-
 typedef ofPixels_<unsigned char> ofPixels;
 typedef ofPixels_<float> ofFloatPixels;
 typedef ofPixels_<unsigned short> ofShortPixels;
@@ -92,6 +92,7 @@ int ofGetGlFormat(const ofPixels_<T> & pixels) {
 	return ofGetGLFormatFromPixelFormat(pixels.getPixelFormat());
 }
 
+
 template<class T>
 int ofGetGLFormat(const ofPixels_<T> & pixels) {
     return ofGetGLFormatFromPixelFormat(pixels.getPixelFormat());
@@ -100,6 +101,9 @@ int ofGetGLFormat(const ofPixels_<T> & pixels) {
 std::string ofGLSLVersionFromGL(int major, int minor);
 std::string ofGLSLVersionFromGL();
 std::string ofGLSLGetDefaultHeader();
+#ifdef TARGET_OPENGLES
+int ofGLESVersionFromGL();
+#endif
 
 #ifndef TARGET_OPENGLES
 void ofEnableGLDebugLog();

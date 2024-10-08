@@ -29,7 +29,9 @@ common:
 	# include search paths, this will be usually parsed from the file system
 	# but if the addon or addon libraries need special search paths they can be
 	# specified here separated by spaces or one per line using +=
-	 ADDON_INCLUDES+=../ofxAssimpModelLoader/libs/assimp/include/
+	ADDON_INCLUDES += ../ofxAssimpModelLoader/libs/assimp/include/
+	ADDON_INCLUDES += ../ofxAssimpModelLoader/libs/assimp/include/
+	ADDON_ADDITIONAL_LIBS = ../ofxAssimpModelLoader/libs
 
 	# any special flag that should be passed to the compiler when using this
 	# addon
@@ -102,11 +104,12 @@ android/x86:
 
 ios:
 	ADDON_LIBS=
-	ADDON_LIBS=../ofxAssimpModelLoader/libs/assimp/lib/ios/assimp.a
+	ADDON_LIBS=../ofxAssimpModelLoader/libs/assimp/lib/macos/assimp.xcframework/ios-arm64/assimp.a
+	ADDON_LIBS=../ofxAssimpModelLoader/libs/assimp/lib/macos/assimp.xcframework/ios-arm64_x86_64-simulator/assimp.a
 	
 osx:
 	ADDON_LIBS=
-	ADDON_LIBS=../ofxAssimpModelLoader/libs/assimp/lib/osx/assimp.a
+	ADDON_LIBS=../ofxAssimpModelLoader/libs/assimp/lib/osx/assimp.xcframework/macos-arm64_x86_64/assimp.a
 	
 emscripten:
 	ADDON_LIBS=

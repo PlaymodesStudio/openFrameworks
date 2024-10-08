@@ -3,8 +3,10 @@
 #include "ofAppBaseWindow.h"
 // MARK: Optimize to Pointer
 #include "ofRectangle.h"
+// MARK: Target
 #include "ofConstants.h"
 
+#if defined(TARGET_GLFW_WINDOW)
 #if defined(TARGET_LINUX) && !defined(TARGET_RASPBERRY_PI_LEGACY)
 typedef struct _XIM * XIM;
 typedef struct _XIC * XIC;
@@ -164,7 +166,7 @@ public:
 	Window getX11Window();
 	XIC getX11XIC();
 
-	void setWindowIcon(const std::string & path);
+	void setWindowIcon(const of::filesystem::path & path);
 	void setWindowIcon(const ofPixels & iconPixels);
 #endif
 
@@ -249,4 +251,4 @@ private:
 #endif // TARGET_WIN32
 };
 
-//#endif
+#endif
