@@ -52,6 +52,42 @@ void ofParameterGroup::clear() {
 	setName(name);
 }
 
+void ofParameterGroup::reorder(const std::vector<std::string> & names) {
+	// Build lookup from escaped name -> existing shared_ptr
+	std::map<std::string, std::shared_ptr<ofAbstractParameter>> byEscaped;
+	for (auto & p : obj->parameters) {
+		byEscaped[p->getEscapedName()] = p;
+	}
+
+	std::vector<std::shared_ptr<ofAbstractParameter>> sorted;
+	std::set<std::string> placed;
+
+	// Place requested names first, in order
+	for (const auto & name : names) {
+		auto escaped = escape(name);
+		auto it = byEscaped.find(escaped);
+		if (it != byEscaped.end() && placed.find(escaped) == placed.end()) {
+			sorted.push_back(it->second);
+			placed.insert(escaped);
+		}
+	}
+
+	// Append any parameters not mentioned (preserve original relative order)
+	for (auto & p : obj->parameters) {
+		if (placed.find(p->getEscapedName()) == placed.end()) {
+			sorted.push_back(p);
+		}
+	}
+
+	obj->parameters = sorted;
+
+	// Rebuild index
+	obj->parametersIndex.clear();
+	for (std::size_t i = 0; i < obj->parameters.size(); i++) {
+		obj->parametersIndex[obj->parameters[i]->getEscapedName()] = i;
+	}
+}
+
 std::string ofParameterGroup::valueType() const {
 	return typeid(*this).name();
 }

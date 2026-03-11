@@ -264,6 +264,11 @@ public:
 	bool isReadOnly() const;
 	std::shared_ptr<ofAbstractParameter> newReference() const;
 
+	/// Reorder parameters in-place without creating or destroying any objects.
+	/// Parameters listed in \p names are placed first (in that order); any
+	/// parameters not mentioned are appended afterwards in their original order.
+	void reorder(const std::vector<std::string> & names);
+
 	void setParent(ofParameterGroup & parent);
 
 	operator bool() const;
